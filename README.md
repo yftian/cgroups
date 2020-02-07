@@ -1,5 +1,7 @@
 # cgroups 
 >简要记录cgroups对那些系统资源限制，以及基于golang和python不同语言的具体实现。  
+golang:[containerd/cgroups](https://github.com/containerd/cgroups)
+python:[cloudsigma/cgroupspy](https://github.com/cloudsigma/cgroupspy)
 
 blkio – BLOCK IO资源控制  
 -- 
