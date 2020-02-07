@@ -45,3 +45,56 @@ cpu – CPU资源控制
 
 >1.`cpu.rt_period_us` ：设定周期时间。  
 >2.`cpu.rt_runtime_us`：设定周期中的运行时间。  
+
+cpuacct – CPU资源报告  
+--  
+>这个子系统的配置是cpu子系统的补充，提供CPU资源用量的统计，时间单位都是纳秒。  
+>1.`cpuacct.usage`：统计cgroup中所有task的cpu使用时长  
+>2.`cpuacct.stat`：统计cgroup中所有task的用户态和内核态分别使用cpu的时长  
+>3.`cpuacct.usage_percpu`：统计cgroup中所有task使用每个cpu的时长  
+
+cpuset – CPU绑定  
+--  
+>为task分配独立CPU资源的子系统，参数较多，这里只选讲两个必须配置的参数，同时Docker中目前也只用到这两个。  
+>1.`cpuset.cpus`：在这个文件中填写cgroup可使用的CPU编号，如0-2,16代表 0、1、2和16这4个CPU。
+>2.`cpuset.mems`：与CPU类似，表示cgroup可使用的memory node，格式同上
+
+device – 限制task对device的使用  
+--  
+* **设备黑/白名单过滤 **  
+>1.`devices.allow`：允许名单，语法type device_types:node_numbers access type ；type有三种类型：b（块设备）、c（字符设备）、a（全部设备）；access也有三种方式：r（读）、w（写）、m（创建）。  
+>2`devices.deny`：禁止名单，语法格式同上。  
+* 统计报告  
+>1.`devices.list`：报告为这个cgroup 中的task设定访问控制的设备  
+
+freezer – 暂停/恢复cgroup中的task  
+--
+>只有一个属性，表示进程的状态，把task放到freezer所在的cgroup，再把state改为FROZEN，就可以暂停进程。不允许在cgroup处于FROZEN状态时加入进程。  
+* **freezer.state **，包括如下三种状态：  
+– FROZEN 停止  
+– FREEZING 正在停止，这个是只读状态，不能写入这个值。  
+– THAWED 恢复  
+
+memory – 内存资源管理  
+--  
+* 限额类  
+>1.`memory.limit_in_bytes`：强制限制最大内存使用量，单位有k、m、g三种，填-1则代表无限制。  
+>2.`memory.soft_limit_in_bytes`：软限制，只有比强制限制设置的值小时才有意义。填写格式同上。当整体内存紧张的情况下，task获取的内存就被限制在软限制额度之内，以保证不会有太多进程因内存挨饿。可以看到，加入了内存的资源限制并不代表没有资源竞争。  
+>3.`memory.memsw.limit_in_bytes`：设定最大内存与swap区内存之和的用量限制。填写格式同上。  
+* 报警与自动控制  
+>1.`memory.oom_control`：改参数填0或1， 0表示开启，当cgroup中的进程使用资源超过界限时立即杀死进程，1表示不启用。默认情况下，包含memory子系统的cgroup都启用。当oom_control不启用时，实际使用内存超过界限时进程会被暂停直到有空闲的内存资源  
+* 统计与监控类  
+>1.`memory.usage_in_bytes`：报告该 cgroup中进程使用的当前总内存用量（以字节为单位）  
+>2.`memory.max_usage_in_bytes`：报告该 cgroup 中进程使用的最大内存用量  
+>3.`memory.failcnt`：报告内存达到在 memory.limit_in_bytes设定的限制值的次数  
+>4.`memory.stat`：包含大量的内存统计数据。  
+* cache：页缓存包括 tmpfs（shmem），单位为字节。  
+* rss：匿名和 swap 缓存不包括 tmpfs（shmem），单位为字节。  
+* mapped_file：memory-mapped 映射文件大小包括 tmpfs（shmem），单位为字节  
+* pgpgin：存入内存中的数  
+* pgpgout：从内存中读出的页数  
+* swap：swap 用量单位为字节  
+
+
+
+
