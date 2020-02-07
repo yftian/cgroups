@@ -93,7 +93,7 @@ memory – 内存资源管理
 * mapped_file：memory-mapped 映射文件大小包括 tmpfs（shmem），单位为字节  
 * pgpgin：存入内存中的数  
 * pgpgout：从内存中读出的页数  
-* swap：swap 用量单位为字节  
+* swap：swap 用量,单位为字节  
 
 
 
